@@ -1,0 +1,87 @@
+﻿@page "/orders"
+@inject IOrderService OrderService
+@inject IAuthService AuthService
+@inject NavigationManager _nav
+
+
+<PageTitle>Comenzile mele</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Comenzi</h3>
+
+@if (!isAuthenticated)
+{
+    <span>@message</span>
+    <br />
+    <br />
+    <button class="btn btn-primary mb-3" style="@showbtn"
+        @onclick="@(()=>_nav.NavigateTo("/login?returnUrl=orders"))">
+        Intra in cont
+    </button>
+
+    <div style="@showdiv">
+        <div class="circle"></div>
+        <div class="message">
+            <span>Se incarca lista...</span>
+        </div>
+        <br />
+        <br />
+    </div>
+}
+else if (orders.Count <= 0)
+{
+    <br />
+    <br />
+    <span>Nu sunt comenzi.</span>
+    <br />
+    <br />
+}
+else
+{
+    @foreach (var order in orders.Take(40))
+    {
+        <div class="container">
+            <div class="image-wrapper">
+                <img src="@order.ProductImgUrl" class="image" />
+            </div>
+            <div class="details">
+                <h4>@order.Product</h4>
+                <span>@order.OrderDate.ToString("dd-MM-yyyy")</span>
+                <br />
+                <a href="orders/@order.Id">Detalii..</a>
+            </div>
+            <div class="order-price"> @order.TotalPrice Lei <br><span class="small">+Transport: @costLivrare.ToString("0.00") Lei</span></div>
+        </div>
+    }
+
+}
+
+@code {
+    List<OrderOverviewResponse> orders = null!;
+    double costLivrare = 20.00;
+    bool isAuthenticated = false;
+    string message = string.Empty;
+
+    string showbtn = "display: none;";
+    string showdiv = "display: block;";
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsUserAuthenticated();
+
+        @if (!isAuthenticated)
+        {
+            message = "Intra in cont pentru a vedea comenzile.";
+            showbtn = "display: block;";
+            showdiv = "display: none;";
+        }
+        else
+        {
+            orders = await OrderService.GetOrders();
+        }
+
+    }
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Prima pagina", href: "/"),
+        new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+    };
+}

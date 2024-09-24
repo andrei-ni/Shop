@@ -1,0 +1,98 @@
+﻿@page "/admin/users/{page:int}"
+@inject IAuthService AuthService
+@using System.ComponentModel.DataAnnotations.Schema
+@using System.Linq;
+@using System.Reflection;
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Clienti</PageTitle>
+<br/>
+<h3>Clienti</h3>
+
+@if(AuthService.UserList.Count <= 0)
+{
+    <br />
+    <br />
+    <div class="circle"></div>
+    <div class="message">
+        <span>Se incarca lista...</span>
+    </div>
+    <br />
+    <br />
+}
+else
+{
+    <UserList/>
+}
+
+<div class="desktop">
+    @if (AuthService.CurrentPage == 1)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled>Pagina anterioara</button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/users/@(AuthService.CurrentPage - 1)">Pagina anterioara</a>
+    }
+
+    @for (var i = 1; i <= AuthService.PageCount; i++)
+    {
+        if (i > 3)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled>@AuthService.CurrentPage din @AuthService.PageCount</button>
+            <a class="btn @(AuthService.PageCount==AuthService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+       href="/admin/users/@AuthService.PageCount">@AuthService.PageCount</a>
+            break;
+        }
+
+        <a class="btn @(i==AuthService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+       href="/admin/users/@i">@i</a>
+    }
+    @if (AuthService.CurrentPage >= AuthService.PageCount)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled>Pagina urmatoare</button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/users/@(AuthService.CurrentPage + 1)">Pagina urmatoare</a>
+    }
+</div>
+
+<div class="mobile">
+    @if (AuthService.CurrentPage == 1)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-left"></i></button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/users/@(AuthService.CurrentPage - 1)"><i class="bi bi-arrow-left"></i></a>
+    }
+
+    <button class="btn btn-outline-primary page-selection middle" disabled>@AuthService.CurrentPage din @AuthService.PageCount</button>
+
+    @if (AuthService.CurrentPage >= AuthService.PageCount)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-right"></i></button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/users/@(AuthService.CurrentPage + 1)"><i class="bi bi-arrow-right"></i></a>
+    }
+</div>
+
+<br />
+<br />
+
+@code {
+    [Parameter]
+    public int Page { get; set; } = 1;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        await AuthService.GetUsers(Page);
+    }
+}

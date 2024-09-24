@@ -1,0 +1,158 @@
+.btt {
+    float: right;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    color: #333;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+    color: gray;
+}
+a:hover{
+    text-decoration:underline;
+}
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+main {
+    flex: 1;
+}
+
+.sidebar {
+    background-color: #fff; /* background-image:linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%) */
+    box-shadow: 0 5px 15px 0 rgba(0,0,0, .1);
+
+}
+
+.top-row {
+    background-color: #fff; /*#f7f7f7*/
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-start;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    
+
+}
+
+    .top-row ::deep a, .top-row ::deep .btn-link {
+        white-space: nowrap;
+        /*margin-left: 1.5rem;*/
+        text-decoration: none;
+    }
+
+    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+        text-decoration: underline;
+    }
+
+    .top-row ::deep a:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+@media (max-width: 640.98px) {
+    .contul-meu, .cosul-meu {
+        font-size: 8px;
+    }
+
+    .bi-person-circle, .bi-bag {
+        font-size: 8px !important;
+    }
+    .top-row:not(.auth) {
+        display: none;
+    }
+    
+    .top-row.auth {
+        justify-content: space-between;
+    }
+       
+}
+
+@media (min-width: 641px) {
+    .page {
+        flex-direction: row;
+        
+    }
+    
+    .sidebar {
+        width: 300px; 
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+
+    }
+
+    .top-row.auth ::deep a:first-child {
+        flex: 1;
+        text-align: right;
+        width: 0;
+    }
+
+}
+
+#footer {
+    background-color: #E7EFF8;
+    font-size: 14px;
+}
+    #footer b {
+        color: #3B6FC9;
+        font-size: 18px;
+    }
+
+ul.no-bullets {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.line-top {
+    height: 5px;
+    background-color: #0084EF;
+}
+.line-bottom {
+    height: 5px;
+    background-color: #F91D23;
+}
+
+.navbar-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.contul-meu, .cosul-meu {
+    width: 120px;
+    font-size: 14px;
+}
+
+.bi-person-circle, .bi-bag {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.gdpr-banner {
+    font-size: medium;
+    font-weight: 500;
+    padding: 16px 0;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    /*border: 1px solid #e0e0e0;*/
+}

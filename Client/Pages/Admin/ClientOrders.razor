@@ -1,0 +1,62 @@
+﻿@page "/admin/client-orders"
+@inject IOrderService OrderService
+@attribute [Authorize(Roles = "Admin")]
+
+
+<PageTitle>Comenzi clienti</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Comenzi clienti</h3>
+
+@if (orders == null)
+{
+    <br />
+    <br />
+    <div class="circle"></div>
+    <div class="message">
+        <span>Se incarca lista...</span>
+    </div>
+    <br />
+    <br />
+}
+else if (orders.Count <= 0)
+{
+    <br />
+    <br />
+    <span>Nu sunt comenzi.</span>
+    <br />
+    <br />
+}
+
+else
+{
+    @foreach (var order in orders.Take(40))
+    {
+        <div class="container">
+            <div class="details">
+                <h4>@order.Product</h4>
+                <span>@order.OrderDate.ToString("dd-MM-yyyy")</span>
+                <br />
+                <a href="admin/client-orders/@order.Id">Detalii..</a>
+            </div>
+            <div class="order-price"> @order.TotalPrice Lei <br><span class="small">+Transport: @costLivrare.ToString("0.00") Lei</span></div>
+        </div>
+    }
+}
+<br />
+
+@code {
+    List<OrderOverviewResponse> orders = null!;
+    double costLivrare = 20.00;
+
+    string name = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.AdminGetOrders();
+    }
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Prima pagina", href: "/"),
+        new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+    };
+}

@@ -1,0 +1,97 @@
+﻿@page "/profile"
+@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager _nav
+@attribute [Authorize]
+
+<PageTitle>Contul meu</PageTitle>
+<AuthorizeView>
+	<br />
+	<h3>
+		Salut, @context.User.Identity.Name
+	</h3>
+	<hr />
+
+</AuthorizeView>
+
+<h5>Adresa livrare</h5>
+<AddressForm />
+<br />
+
+<hr />
+<h5>Schimbare parola:</h5>
+<EditForm Model="request" OnValidSubmit="ChangePassword">
+	<DataAnnotationsValidator></DataAnnotationsValidator>
+
+	<div class="mb-3">
+		<label for="password">Parola noua</label>
+		<input id="password" @bind-value="request.Password" class="form-control" type="password" />
+		<ValidationMessage For="@(()=> request.Password)" />
+	</div>
+
+	<div class="mb-3">
+		<label for="confirmPassword"> Confirma parola noua</label>
+		<input id="confirmPassword" @bind-value="request.ConfirmPassword" class="form-control" type="password" />
+		<ValidationMessage For="@(()=> request.ConfirmPassword)" />
+	</div>
+
+	<button type="submit" class="btn btn-primary mb-3" style="border-radius: 5px;">Schimba parola</button>
+	<div>
+			<span>@message</span>
+		</div>
+
+	<br />
+	
+</EditForm>
+
+<br/>
+<AuthorizeView>
+	<button class="btn btn-danger" style="border-radius: 5px;" @onclick="Sterge">
+		<i class="bi bi-trash" id="icon"></i>&nbsp; Sterge cont
+	</button>
+	<br/>
+	<br/>
+	<div hidden="@sterge">
+		<span>Esti sigur(a)?</span>
+		<br />
+		<br />
+		<button class="btn btn-info" style="border-radius: 5px;" @onclick="Sterge">
+			<i class="bi bi-exclamation-circle" id="icon"></i>&nbsp; Nu!
+		</button>
+		<button type="button" class="btn btn-danger" style="border-radius: 5px;" @onclick="()=>DeleteUser(context.User.Identity.Name)">
+			<i class="bi bi-check-circle-fill"></i>&nbsp; Sterge
+		</button>
+	</div>
+	
+</AuthorizeView>
+<br />
+<br />
+<br />
+
+@code {
+	UserChangePassword request = new UserChangePassword();
+	string message = string.Empty;
+
+	public bool sterge = true;
+	public void Sterge()
+	{
+
+		sterge = !sterge;
+
+	}
+
+	private async Task ChangePassword()
+	{
+		var result = await AuthService.ChangePassword(request);
+		message = result.Message;
+	}
+
+	async void DeleteUser(string email){
+		await LocalStorage.RemoveItemAsync("authToken");
+		await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		_nav.NavigateTo("");
+		await AuthService.DeleteUser(email);
+		sterge = !sterge;
+	}
+}

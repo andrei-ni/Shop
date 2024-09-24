@@ -1,0 +1,85 @@
+﻿@page "/admin/order-details"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@inject IOrderService OrderService
+@inject NavigationManager _nav
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Istoric comenzi client</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Istoric comenzi client</h3>
+
+@foreach (var order in OrderService.OrderList.Take(40).Reverse())
+{
+    @if (order.UserId == userId)
+    {
+        <h5>Comanda nr: @order.Id</h5>
+        <span>Data: @order.OrderDate</span>
+        <br />
+        <span class="wb;">Pret total: @order.TotalPrice Lei +Transport 20 lei</span>
+
+        @if (order.OrderItems != null)
+        {
+            <br />
+            <span>Produse:</span>
+            <br />
+            @foreach (var oi in order.OrderItems)
+            {
+                if (order.Id == oi.OrderId)
+                {
+                    <br/>
+                    <span class="wb;">Nume produs: @oi.Product.Name</span>
+                    <br/>
+                    <span>Cantitate: @oi.Quantity</span>
+                    <br />
+                }
+            }
+        }
+
+        <br />
+        if (order.Message != string.Empty)
+        {
+            <span class="wb;">Mesaj: @order.Message</span>
+            <br />
+        }
+        <br />
+        if (order.Image != string.Empty)
+        {
+            <span>Imagine:</span>
+            <br />
+            <img src="@order.Image" style="width: 300px;" />
+            <br />
+        }
+
+        <hr />
+    }
+    else
+    {
+        <br />
+        <span>Nu are comenzi.</span>
+        <br />
+        <br />
+        break;
+    }
+}
+
+@code {
+    public List<OrderItem> OrderItems = new List<OrderItem>();
+    int userId = 0;
+    private StringValues id = String.Empty;
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = _nav.ToAbsoluteUri(_nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("id", out id))
+        {
+            userId = Convert.ToInt32(id);
+        }
+        await OrderService.GetAllOrders();
+    }
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Prima pagina", href: "/"),
+        new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+    };
+}

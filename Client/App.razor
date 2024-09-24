@@ -1,0 +1,31 @@
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <h3 class="pt-5">Nu poti vedea pagina.</h3>
+                    <h5 class="pb-5"><a href="login"> Intra in cont</a> sau <a href="register"> creeaza un cont. </a></h5>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>404 - Nu exista</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <div class="center">
+                 <img src="images/404.svg" style="width: 300px; filter: invert(44%) sepia(81%) saturate(707%) hue-rotate(182deg) brightness(91%) contrast(91%); "/>
+                 <br/>
+                    <b role="alert" class="alert">Pagina nu a fost gasita.</b>
+                <br />
+                <button> <a href="/"> Mergi la prima pagina </a> </button>
+                </div>
+                <br />
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+<link href="css/bootstrap/bootstrap.css" rel="stylesheet" />
+<link href="lib/bootstrap-icons-1.8.3/bootstrap-icons.css" rel="stylesheet" />
+<link href="css/app.css" rel="stylesheet" />
+<link href="DrPrint.Client.styles.css" rel="stylesheet" />

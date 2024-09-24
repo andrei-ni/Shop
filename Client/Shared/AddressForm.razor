@@ -1,0 +1,115 @@
+﻿@inject IAddressService AddressService
+
+
+@if (address == null)
+{
+	<span style="color:red;">Nu exista adresa de livrare.</span>
+	<br />
+	<button class="btn btn-primary" style="border-radius: 5px;" @onclick="InitAddress">Adauga o adresa</button>
+}
+else if (!editAddress)
+{
+	<p>
+		<span>@address.Name</span><br>
+		<span>@address.PhoneNumber</span><br>
+		<span>@address.City, @address.State, @address.PostalCode</span><br>
+		<span>@address.Country</span><br>
+		<span>@address.CompanyName</span><br>
+		<span>@address.CompanyVat</span><br>
+		<span>@address.CompanyAddress</span>
+	</p>
+	<button class="btn btn-primary" style="border-radius: 5px;" @onclick="EditAddress">Modifica</button>
+}
+else
+{
+	<EditForm Model="address" OnSubmit="SubmitAddress">
+		<DataAnnotationsValidator />
+		<div class="mb-3">
+			<label for="name">Nume Prenume*</label>
+			<InputText id="name" @bind-Value="address.Name" class="form-control" />
+			<ValidationMessage For="@(()=> address.Name)" />
+		</div>
+		<div class="mb-3">
+			<label for="phonenumber">Numar Telefon*</label>
+			<InputText id="phonenumber" @bind-Value="address.PhoneNumber" class="form-control" />
+			<ValidationMessage For="@(()=> address.PhoneNumber)" />
+		</div>
+		<div class="mb-3">
+			<label for="street">Strada*</label>
+			<InputText id="street" @bind-Value="address.Street" class="form-control" />
+			<ValidationMessage For="@(()=> address.Street)" />
+		</div>
+		<div class="mb-3">
+			<label for="city">Oras*</label>
+			<InputText id="city" @bind-Value="address.City" class="form-control" />
+			<ValidationMessage For="@(()=> address.City)" />
+		</div>
+		<div class="mb-3">
+			<label for="state">Judet</label>
+			<InputText id="state" @bind-Value="address.State" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label for="postalcode">Cod Postal*</label>
+			<InputText id="postalcode" @bind-Value="address.PostalCode" class="form-control" />
+			<ValidationMessage For="@(()=> address.PostalCode)" />
+		</div>
+		<div class="mb-3">
+			<label for="country">Tara</label>
+			<InputText id="country" @bind-Value="address.Country" class="form-control" />
+		</div>
+
+
+		<h5>Persoana Juridica (Daca vrei factura pe firma)</h5>
+		<div class="mb-3">
+			<label for="companyname">Nume Companie</label>
+			<InputText id="companyname" @bind-Value="address.CompanyName" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label for="companyvat">C.U.I.</label>
+			<InputText id="companyvat" @bind-Value="address.CompanyVat" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label for="companyaddress">Adresa Companie</label>
+			<InputText id="companyaddress" @bind-Value="address.CompanyAddress" class="form-control" />
+		</div>
+		@if (address.Name == string.Empty ||
+				address.PhoneNumber == string.Empty ||
+				address.Street == string.Empty ||
+				address.City == string.Empty ||
+				address.PostalCode == string.Empty)
+		{
+			<ValidationMessage For="@(()=> address.Name)" />
+			<ValidationMessage For="@(()=> address.PhoneNumber)" />
+			<ValidationMessage For="@(()=> address.Street)" />
+			<ValidationMessage For="@(()=> address.City)" />
+			<ValidationMessage For="@(()=> address.PostalCode)" />
+		}
+		
+		<button type="submit" class="btn btn-primary" style="border-radius: 5px;">Salveaza</button>
+		
+
+	</EditForm>
+}
+
+@code {
+	Address address = null;
+	bool editAddress = false;
+	protected override async Task OnInitializedAsync()
+	{
+		address = await AddressService.GetAddress();
+	}
+	private async Task SubmitAddress()
+	{
+		editAddress = false;
+		address = await AddressService.AddOrUpdateAddress(address);
+	}
+	private void InitAddress()
+	{
+		address = new Address();
+		editAddress = true;
+	}
+	private void EditAddress()
+	{
+		editAddress = true;
+	}
+}

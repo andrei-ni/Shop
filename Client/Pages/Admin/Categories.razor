@@ -1,0 +1,140 @@
+﻿@page "/admin/categories"
+@inject ICategoryService CategoryService
+@attribute [Authorize(Roles = "Admin")]
+@implements IDisposable
+
+<PageTitle>Categorii DrPrint</PageTitle>
+<br />
+<h3>Categorii</h3>
+
+<div class="header">
+	<div class="col">ID</div>
+	<div class="col">Nume</div>
+	<div class="col">Url</div>
+	<div class="col">Descriere</div>
+	<div class="col">Vizibil</div>
+	<div class="col"></div>
+</div>
+
+@foreach (var category in CategoryService.AdminCategories)
+{
+	@if (category.Editing)
+	{
+		<EditForm Model="editingCategory" OnSubmit="UpdateCategory">
+			<div class="row">
+				<div class="col">
+					<InputText @bind-Value="editingCategory.Name" class="form-control"></InputText>
+				</div>
+				<div class="col">
+					<InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
+				</div>
+				<div class="col">
+					<InputTextArea @bind-Value="editingCategory.Description" class="form-control"></InputTextArea>
+				</div>
+				<div class="col col-visible">
+					<InputCheckbox @bind-Value="editingCategory.Visible" style="transform: scale(1.5,1.5);"></InputCheckbox>
+				</div>
+				<div class="col">
+					<button type="submit" class="btn btn-success" style="border-radius: 5px;">
+						<i class="bi bi-check2-circle"></i>
+					</button>
+					<button class="btn btn-secondary" style="border-radius: 5px;" @onclick="CancelEditing">
+						<i class="bi bi-x-circle"></i>
+					</button>
+				</div>
+			</div>
+		</EditForm>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col-1">
+				@category.Id
+			</div>
+			<div class="col">
+				@category.Name
+			</div>
+			<div class="col">
+				@category.Url
+			</div>
+			<div class="col">
+				@category.Description
+			</div>
+			<div class="col col-visible">
+				<span>@(category.Visible ? "✔️" : "❌")</span>
+			</div>
+			<div class="col">
+				<button class="btn btn-primary" style="border-radius: 5px;" @onclick="(() => EditCategory(category))">
+					<i class="bi bi-pencil"></i>
+				</button>
+				<button class="btn btn-danger" style="border-radius: 5px;" @onclick="Show">
+					<i class="bi bi-trash"></i>
+				</button>
+				<button hidden="@show" class="btn  btn-danger" style="border-radius: 5px;" @onclick="(() => DeleteCategory(category.Id))">
+					<i class="bi bi-check-circle-fill"></i>
+				</button>
+			</div>
+		</div>
+	}
+}
+
+<button class="btn btn-primary" style="border-radius: 5px;" @onclick="CreateNewCategory">
+	<i class="bi bi-plus"></i> &ensp;Adauga categorie
+</button>
+
+<hr />
+
+@code {
+	Category editingCategory = null;
+	public bool show = true;
+	public void Show()
+	{
+
+		show = !show;
+
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await CategoryService.GetAdminCategoriesAsync();
+		CategoryService.OnChange += StateHasChanged;
+	}
+	public void Dispose()
+	{
+		CategoryService.OnChange -= StateHasChanged;
+	}
+
+	private async void CreateNewCategory()
+	{
+		editingCategory = CategoryService.CreateNewCategory();
+	}
+	private void EditCategory(Category category)
+	{
+		category.Editing = true;
+		editingCategory = category;
+	}
+	private async Task UpdateCategory()
+	{
+		if (editingCategory.IsNew)
+		{
+			await CategoryService.AddCategory(editingCategory);
+		}
+		else
+		{
+			await CategoryService.UpdateCategory(editingCategory);
+		}
+		editingCategory = new Category();
+	}
+
+	private async Task CancelEditing()
+	{
+		editingCategory = new Category();
+		await CategoryService.GetAdminCategoriesAsync();
+	}
+
+	private async Task DeleteCategory(int id)
+	{
+		await CategoryService.DeleteCategory(id);
+		show = !show;
+	}
+}

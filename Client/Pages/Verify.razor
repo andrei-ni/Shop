@@ -1,0 +1,39 @@
+﻿@page "/verify"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+
+<br/>
+<div style="text-align:center">
+@if (getToken.Length > 7){
+<h6>@message</h6>
+}
+
+<span><a href="/login" style="text-decoration:none;">Intra in cont</a></span>
+</div>
+<br/>
+<br/>
+
+
+
+@code {
+    string getToken = string.Empty;
+    string message = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        getToken = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+
+        if (getToken != string.Empty){
+            message = "Contul a fost verificat. Multumim.";
+            VerifyToken();
+        }
+        
+
+    }
+    private async void VerifyToken()
+    {
+        await AuthService.Verify(getToken);
+    }
+
+}

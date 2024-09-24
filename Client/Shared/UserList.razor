@@ -1,0 +1,51 @@
+﻿@inject IAuthService AuthService
+@implements IDisposable
+
+<div class="table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Adresa</th>
+                <th>Companie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="AuthService.UserList" Context="user">
+                @if(user.Email != string.Empty)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td><a href="admin/order-details?id=@user.Id"> @user.Email</a></td>
+                        @if (user.Address != null)
+                        {
+                            <td>@user.Address.PhoneNumber</td>
+                            <td>@user.Address.City, @user.Address.Street, @user.Address.PostalCode</td>
+                            <td>@user.Address.CompanyName, @user.Address.CompanyVat, @user.Address.CompanyAddress</td>
+                        }
+                        else
+                        {
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        }
+                    </tr>
+                }
+            </Virtualize>
+        </tbody>
+    </table>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthService.UsersChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AuthService.UsersChanged -= StateHasChanged;
+    }
+}

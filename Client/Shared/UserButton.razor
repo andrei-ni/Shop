@@ -1,0 +1,85 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager _nav
+@inject ICartService CartService
+
+<div class="dropdown">
+    <button @onclick="ToggleUserMenu"
+            @onfocusout="HideUserMenu"
+            class="btn btn-secondary dropdown-toggle user-button">
+        <span><i class="bi bi-person-circle"></i>&nbsp; Contul Meu</span>
+    </button>
+    <AuthorizeView>
+        <NotAuthorized>
+            <div class="@show">
+                <div class="fdiv">
+                    <i class="bi bi-person-fill"></i>
+                <span class="text">Intra in contul tau DrPrint</span>
+                </div>
+                <div class="sdiv">
+                    <a class="inbtn" href="login?returnUrl=@_nav.ToBaseRelativePath(_nav.Uri)" @onclick="Close">Intra in cont</a>
+                    <a class="regbtn" href="register" @onclick="Close">Cont nou</a>
+
+                    <i class="bi bi-x-circle" @onclick="Close"></i>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+    <div class="dropdown-menu @UserMenuCssClass">
+        <AuthorizeView>
+            <Authorized>
+                <a href="profile" class="dropdown-item">Contul meu</a>
+                <a href="orders" class="dropdown-item">Comenzile mele</a>
+                <hr />
+                <AdminMenu />
+                <button class="dropdown-item" @onclick="Logout">Logout</button>
+            </Authorized>
+            <NotAuthorized>
+                <a href="login?returnUrl=@_nav.ToBaseRelativePath(_nav.Uri)" class="dropdown-item">Intra in cont</a>
+                <a href="register" class="dropdown-item">Cont nou</a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
+
+
+@code {
+    private bool showUserMenu = false;
+    private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
+
+    private void ToggleUserMenu()
+    {
+        showUserMenu = !showUserMenu;
+        show = "close";
+    }
+
+    private string show = "close";
+
+    async Task Show()
+    {
+        await Task.Delay(4000);
+        show = "show";
+    }
+    void Close()
+    {
+        show = "close";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Show();
+    }
+    private async Task HideUserMenu()
+    {
+        await Task.Delay(200);
+        showUserMenu = false;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await CartService.GetCartItemsCount();
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _nav.NavigateTo("");
+    }
+}

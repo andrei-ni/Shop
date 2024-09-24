@@ -1,0 +1,46 @@
+﻿@inject ISubCategoryService SubCategoryService
+@implements IDisposable
+
+@if (SubCategoryService.SubCategories == null)
+{
+    <br />
+    <br />
+    <div class="circle"></div>
+    <div class="message">
+        <span>Se incarca lista...</span>
+    </div>
+    <br />
+    <br />
+}
+else
+{
+    <div id="subcat-list">
+
+        @foreach (var sc in SubCategoryService.SubCategories)
+        {
+            <div id="subcat-box">
+                <a href="@sc.Url/1"><img class="scchild" src="@sc.ImageUrl" alt="@sc.Name" /></a>
+                <a href="@sc.Url/1" class="scchild">@sc.Name</a>
+            </div>
+        }
+    </div>
+   
+}
+
+<br />
+
+
+@code {
+    public List<SubCategory> SubCategories { get; set; }
+
+    string description = string.Empty;
+    protected override void OnInitialized()
+    {
+        SubCategoryService.SubCategoryChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        SubCategoryService.SubCategoryChanged -= StateHasChanged;
+    }
+}

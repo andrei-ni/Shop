@@ -1,0 +1,50 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager _nav
+@inject ICartService CartService
+
+<div class="dropdown">
+	<button @onclick="ToggleUserMenu"
+		    @onfocusout="HideUserMenu"
+			class="btn btn-secondary dropdown-toggle user-button">
+			<i class="bi bi-person-circle"></i>
+		</button>
+		<div class="dropdown-menu @UserMenuCssClass">
+			<AuthorizeView>
+				<Authorized>
+					<a href="profile" class="dropdown-item">Contul meu</a>
+					<a href="orders" class="dropdown-item">Comenzile mele</a>
+					<hr/>
+					<AdminMenu/>
+					<button class="dropdown-item" @onclick="Logout">Logout</button>
+				</Authorized>
+				<NotAuthorized>
+					<a href="login?returnUrl=@_nav.ToBaseRelativePath(_nav.Uri)" class="dropdown-item">Intra in cont</a>
+				    <a href="register" class="dropdown-item">Cont nou</a>
+				</NotAuthorized>
+			</AuthorizeView>
+		</div>
+</div>
+
+
+@code {
+	private bool showUserMenu = false;
+	private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
+	private void ToggleUserMenu()
+	{
+		showUserMenu = !showUserMenu;
+	}
+
+	private async Task HideUserMenu()
+	{
+		await Task.Delay(200);
+		showUserMenu = false;
+	}
+
+	private async Task Logout()
+	{
+		await LocalStorage.RemoveItemAsync("authToken");
+		await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		_nav.NavigateTo("");
+	}
+}

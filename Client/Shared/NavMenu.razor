@@ -1,0 +1,129 @@
+﻿@inject ICategoryService CategoryService
+@inject ISubCategoryService SubCategoryService
+@inject NavigationManager _nav
+@implements IDisposable
+
+<div class="top-div">
+    <a href="/" id="logo"><img src="/images/logo.jpg" alt="logo" /></a>
+    <div class="mobile-nav-btns">
+        <UserButtonMobile/>
+        <CartCounter/>
+    </div>
+</div>
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href=""><span class="oi oi-home" aria-hidden="true"></span>Acasa</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+<div class="search-mobile" style="margin-left:10px;">
+    <SearchMobile />
+</div>
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+
+        <div id="mobile">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-black" href="Subcategorii/articole-personalizate">
+                    <i class="bi bi-box2-heart"></i>
+                    &nbsp;
+                    Articole Personalizate
+                    <i class="bi-arrow-right-short"></i>
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-black" href="Subcategorii/print-digital">
+                    <i class="bi bi-printer"></i>
+                    &nbsp;
+                    Print Digital
+                    <i class="bi-arrow-right-short"></i>
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-black" href="Subcategorii/fotografii-si-rame-foto">
+                    <i class="bi bi-images"></i>
+                    &nbsp;
+                    Fotografii si Rame Foto
+                    <i class="bi-arrow-right-short"></i>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link text-black" href="reduceri/1">
+                    <i class="bi bi-gem"></i>
+                    &nbsp;
+                    Reduceri
+                    <i class="bi-arrow-right-short"></i>
+                </NavLink>
+            </div>
+
+        </div>
+    </nav>
+</div>
+
+<div id="desktop">
+
+    <div class="mt-3 mb-3">
+        @foreach (var category in CategoryService.Categories)
+        {
+            <DropdownButton Icon1="" Title="@category.Name" Icon2="bi-arrow-right-short">
+                @foreach (var sc in SubCategoryService.SubCategories)
+                {
+                    if (sc.CategoryId == category.Id)
+                    {
+                     <DropdownButtonItem Href="@sc.Url" ActionName="@sc.Name" />
+                    }
+
+                }
+            </DropdownButton>
+        }
+    </div>
+
+
+    <div style="margin-left: 10px; font-size: 16px">
+        <NavLink class="nav-link text-black" href="reduceri/1">
+            <i class="bi bi-gem" style="margin-right: 2px"></i>
+            Reduceri
+            <i class="bi-arrow-right-short"></i>
+        </NavLink>
+    </div>
+
+
+</div>
+
+<div class="" id="navbar-ads">
+    <a href="reduceri/1"><img src="/images/reduceri.jpg" /></a>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    public bool menu { get; set; }
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetCategoriesAsync();
+        await SubCategoryService.GetSubCategoriesAsync();
+        SubCategoryService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        SubCategoryService.OnChange -= StateHasChanged;
+    }
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+    }
+
+
+}

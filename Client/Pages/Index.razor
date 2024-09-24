@@ -1,0 +1,142 @@
+﻿@page "/"
+@page "/search/{searchText}/{page:int}"
+@page "/{subCategoryUrl}/{page:int}"
+@inject IProductService ProductService
+@using System.ComponentModel.DataAnnotations.Schema
+@using System.Linq;
+@using System.Reflection;
+
+
+@if (SubCategoryUrl != null)
+{
+    <PageTitle>DrPrint | @SubCategoryUrl</PageTitle>
+}
+else
+{
+<PageTitle>DrPrint | Print digital si articole personalizate</PageTitle>
+
+}
+
+@if (SearchText == null && SubCategoryUrl == null)
+{
+
+    <Slider />
+    <hr />
+    <FeaturedProducts />
+}
+else
+{
+    <MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+    <ProductList />
+}
+
+@if (SearchText != null)
+{
+    @for (var i = 1; i <= ProductService.PageCount; i++)
+    {
+        <a class="btn @(i==ProductService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+   href="/search/@ProductService.LastSearchText/@i">@i</a>
+    }
+    <br />
+    <br />
+}
+
+@*PRODUCT PAGINATION*@
+
+else if (SubCategoryUrl != null)
+{
+    <div class="desktop">
+        @if (ProductService.CurrentPage == 1)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled>Pagina anterioara</button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary page-selection"
+           href="@SubCategoryUrl/@(ProductService.CurrentPage - 1)">Pagina anterioara</a>
+        }
+
+        @for (var i = 1; i <= ProductService.PageCount; i++)
+        {
+            if (i > 3)
+            {
+                <button class="btn btn-outline-primary page-selection" disabled>@ProductService.CurrentPage din @ProductService.PageCount</button>
+                <a class="btn @(ProductService.PageCount==ProductService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+                href="@SubCategoryUrl/@ProductService.PageCount">@ProductService.PageCount</a>
+                break;
+            }
+
+            <a class="btn @(i==ProductService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+             href="@SubCategoryUrl/@i">@i</a>
+        }
+        @if (ProductService.CurrentPage >= ProductService.PageCount)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled>Pagina urmatoare</button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary page-selection"
+       href="@SubCategoryUrl/@(ProductService.CurrentPage + 1)">Pagina urmatoare</a>
+        }
+    </div>
+
+    <div class="mobile">
+        @if (ProductService.CurrentPage == 1)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-left"></i></button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary page-selection"
+       href="@SubCategoryUrl/@(ProductService.CurrentPage - 1)"><i class="bi bi-arrow-left"></i></a>
+        }
+
+        <button class="btn btn-outline-primary page-selection middle" disabled>@ProductService.CurrentPage din @ProductService.PageCount</button>
+
+        @if (ProductService.CurrentPage >= ProductService.PageCount)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-right"></i></button>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary page-selection"
+       href="@SubCategoryUrl/@(ProductService.CurrentPage + 1)"><i class="bi bi-arrow-right"></i></a>
+        }
+    </div>
+
+    <br />
+    <br />
+}
+
+@code {
+
+    [Parameter]
+    public string? SubCategoryUrl { get; set; } = null;
+
+    [Parameter]
+    public string? SearchText { get; set; } = null;
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (SearchText != null)
+        {
+
+            await ProductService.SearchProducts(SearchText, Page);
+        }
+        else
+        {
+            await ProductService.GetProductsSubCategory(SubCategoryUrl, Page);
+        }
+
+    }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Prima pagina", href: "/"),
+        new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+    };
+
+}

@@ -1,0 +1,26 @@
+﻿@page "/informatiidelivrare"
+
+<PageTitle>Informatii de livrare | DrPrint</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+<h3>Informatii de livrare</h3>
+
+
+
+<span>
+	Produsele se pot ridica personal la magazinul situat in Str. Stirbei Voda nr. 44 sau se pot trimite
+	prin curier, tarif 20 Lei in toate localitatile din Romania.
+</span>
+
+<br/>
+<br/>
+
+
+@code {
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

@@ -1,0 +1,78 @@
+﻿@inject IProductService ProductService
+
+@if (ProductService.NewProducts == null || ProductService.NewProducts.Count == 0)
+{
+	<br/>
+    <br/>
+    <div class="circle"></div>
+    <div class="message">
+		<span> @ProductService.Message </span>
+    </div>
+    <br />
+	<br />
+}
+else
+{
+	<div id="product-list">
+		@foreach (var product in ProductService.NewProducts)
+		{
+			<div id="product-box">
+				<a href="/product/@product.Id">
+					@if (!string.IsNullOrEmpty(product.ImageUrl))
+					{
+						<img class="pbimage" src="@product.ImageUrl" alt="@product.Name" />
+					}
+					else if (product.Images.Count > 0)
+					{
+						<img class="pbimage" src="@product.Images[0].Data" alt="@product.Name" />
+					}
+
+				</a>
+				
+				@if (product.OriginalPrice > product.Price)
+				{
+					<b class="pbdiscount">-@Discount(product)% </b>
+					@if (reverse > 30.0)
+					{
+						<b class="pbsuper">Super Pret </b>
+					}
+					<a href="/product/@product.Id" class="pbname"><b>@product.Name</b></a>
+				    <span class="pbstock">Stoc: @product.Stock</span>
+					<b class="pboriginalprice">@product.OriginalPrice.ToString("0.00") Lei</b>
+					<b class="pbprice">@product.Price.ToString("0.00") Lei</b>
+				}
+				else
+				{
+					<a href="/product/@product.Id" class="pbname"><b>@product.Name</b></a>
+					<span class="pbstock">Stoc: @product.Stock</span>
+					<b class="pbprice">@product.Price.ToString("0.00") Lei</b>
+				}
+				<a href="/product/@product.Id" class="pbbutton" @onclick="() => IncreaseView(product)">Vezi Detalii</a>
+			</div>
+		}
+	</div>
+}
+
+
+@code {
+	protected override async Task OnParametersSetAsync()
+	{
+		await ProductService.GetNewProducts();
+	}
+
+	double discount = 0.0;
+	double reverse = 0.0;
+
+	public string Discount(Product product)
+	{
+		discount = (product.Price / product.OriginalPrice) * 100;
+		reverse = 100.00 - discount;
+
+		return reverse.ToString("0.00");
+	}
+
+	public async void IncreaseView(Product product)
+	{
+		await ProductService.SetProductView(product);
+	}
+}

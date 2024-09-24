@@ -1,0 +1,128 @@
+﻿
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.box {
+    padding: 1rem;
+}
+
+.catalog {
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+}
+
+@media(max-width: 2271.98px) {
+    .mimg {
+        max-width: 550px;
+    }
+}
+
+#mobile {
+    display: none;
+}
+
+@media(max-width: 640.98px) { /*mobile*/
+    #desktop {
+        display: none;
+    }
+
+    #mobile {
+        display: block;
+    }
+    .mimg {
+        width: 100%;
+    }
+    .pbbutton {
+        width: 100%;
+    }
+    .product-info {
+        width: 100%;
+    }
+}
+
+.product-info {
+    text-align: left;
+    padding: 15px 0 0 10px;
+    width: 350px;
+    height: 200px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+}
+
+.pboriginalprice { /*original price*/
+
+    font-size: 13px;
+    text-decoration-line: line-through;
+}
+
+.pbprice { /*current price*/
+    color: #EF2100;
+    font-size: 17px;
+}
+
+.pbstock {
+    color: green;
+    font-size: 13px;
+}
+
+.pbbutton {
+    flex: 1;
+    background: linear-gradient(to right, #4565C7, #3984DF);
+    border: none;
+    border-radius: 5px;
+    width: 330px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    max-height: 40px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+}
+
+    .pbbutton:hover {
+        background: linear-gradient(to right, #203171, #4565C7);
+    }
+
+.description {
+    width: 100%;
+    padding: 0 15px 15px 15px;
+    text-align: left;
+    min-width: 320px;
+    /*box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;*/
+    border-radius: 5px;
+}
+.dtext {
+    word-break: break-word;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    -ms-word-break: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.close {
+    background-color: white;
+    border: none;
+    font-size: 30px;
+    color: lightgray;
+}
+
+.btn-detalii {
+    border-radius: 5px;
+}
+
+.gimg {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    transition: transform .2s;
+}

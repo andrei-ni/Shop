@@ -1,0 +1,74 @@
+﻿@inject IProductService ProductService
+@inject NavigationManager _nav
+@implements IDisposable
+
+<button class="btn btn-primary float-end" style="border-radius: 5px;" @onclick="CreateProduct">
+    <i class="bi bi-plus-circle float"></i>&nbsp; Adauga produs
+</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Nume</th>
+            <th>Descriere</th>
+            <th>Pret</th>
+            <th>Pret Original</th>
+            <th>Stoc</th>
+            <th>Subcategorie</th>
+            <th>Vizibil</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in ProductService.AdminProducts)
+        {
+            <tr>
+                <td>
+
+                    <img src="@product.ImageUrl" />
+
+                </td>
+                <td>@product.Name</td>
+                @if (product.Description != string.Empty && product.Description.Length >= 20)
+                {
+                    <td>@product.Description.Substring(0,20)...</td>
+                }
+                else
+                {
+                    <td>Fara descriere</td>
+                }
+                <td>@product.Price</td>
+                <td>@product.OriginalPrice</td>
+                <td>@product.Stock</td>
+                <td>@product.SubCategory.Name</td>
+                <td>@(product.Visible ? "✔️" : "❌")</td>
+                <td>
+                    <button class="btn btn-primary" style="border-radius: 5px;" @onclick="(() => EditProduct(product.Id))">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        ProductService.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductsChanged -= StateHasChanged;
+    }
+    void EditProduct(int productId)
+    {
+        _nav.NavigateTo($"admin/product/{productId}");
+    }
+    void CreateProduct()
+    {
+        _nav.NavigateTo("admin/product");
+    }
+}

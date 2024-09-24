@@ -1,0 +1,126 @@
+﻿@inherits LayoutComponentBase
+
+<div class="line-top fixed-top" id="top"></div>
+<div class="page">
+
+	<div class="sidebar" style="z-index: 999 !important;">
+
+		<NavMenu />
+	</div>
+
+	<MudThemeProvider />
+	<MudDialogProvider />
+	<MudSnackbarProvider />
+
+	<main>
+
+		<!-- Search bar -->
+		<div class="top-row px-4" style="z-index: 999 !important;">
+			<Search />
+			<div class="navbar-buttons">
+				<UserButton />
+				<CartCounter />
+			</div>
+		</div>
+		
+		<article class="content px-4">
+			@Body
+			
+			<!-- Footer -->
+			<div id="footer">
+				<div class="container">
+					<div class="row">
+						<div class="col-4" style="margin-top: 50px; margin-bottom: 50px; ">
+							<b> SUPORT CLIENTI </b>
+							<hr />
+							<ul class="no-bullets">
+								<li><a href="/contact">Contact</a></li>
+								<li><a href="/harta-site">Harta site</a></li>
+								<li><a href="/produse-noi">Produse noi</a></li>
+								<li><a href="https://www.anpc.gov.ro/" target="_blank">ANPC</a></li>
+							</ul>
+
+						</div>
+
+						<div class="col-4" style="margin-top: 50px; margin-bottom: 50px;">
+							<b> INFORMATII </b>
+							<hr />
+							<ul class="no-bullets">
+								<li><a href="/desprenoi">Despre noi</a></li>
+								<li><a href="/informatiidelivrare">Informatii de livrare</a></li>
+								<li><a href="/confidentialitate">Politica de confidentialitate</a></li>
+								<li><a href="/termenisiconditii">Termeni si conditii</a></li>
+
+							</ul>
+
+						</div>
+
+						<div class="col-4" style="margin-top: 50px; margin-bottom: 50px; ">
+							<b>CONTUL MEU </b>
+							<hr />
+							<ul class="no-bullets">
+								<li><a href="/profile">Cont</a></li>
+								<li><a href="/orders">Istoric comenzi</a></li>
+							</ul>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<footer class="border-top footer text-muted">
+				<div class="container" style="margin-top: 10px; padding-bottom: 20px;">
+					&copy; @DateTime.Now.Year - ADCO BIROTIC ART SRL | &#67;&#114;&#101;&#97;&#116;&#32;&#100;&#101;&#32; <a href="mailto:&#97;&#110;&#100;&#114;&#101;&#105;&#110;&#105;&#99;&#111;&#108;&#97;&#101;&#109;&#64;&#121;&#97;&#104;&#111;&#111;&#46;&#99;&#111;&#109;?subject = Adco Birotic" style="text-decoration:none; color:#000"> &#78;&#105;&#99;&#111;&#108;&#97;&#101;&#32;&#65;&#110;&#100;&#114;&#101;&#105; </a>
+				</div>
+			</footer>
+
+		</article>
+
+		<GdprBanner @ref="_gdprBanner"
+					BannerOpacity="@(_bannerOpacity / 100)"
+					BannerBackgroundColor="@_bannerColor"
+					AnswerValidUntil="@DateTime.Now.AddDays(_bannerConsentValidDays)"
+					ConsentDetails="@_gdprConsents">
+			<Content>
+				<div class="gdpr-banner">
+					<span class="fa fa-lg fa-cookie-bite m-1" aria-hidden="true"></span>
+					<strong style="color:white">Acest website foloseste cookies pentru imbunatatirea experientei de navigare.
+					Apasand Accept, esti de acord sa permiti colectarea de
+					informatii prin cookie-uri sau tehnologii similare. Afla in sectiunea
+						<a href="/confidentialitate" style="color:lightgray; text-decoration: underline; ">Politica de confidentialitate</a> mai multe despre
+					cookie-uri.</strong>
+
+					<button type="button" class="btn btn-primary m-1" @onclick="async () => await _gdprBanner.AcceptAll()">Accept</button>
+					<button type="button" class="btn btn-secondary m-1" @onclick="async () => await _gdprBanner.RejectAll()">Refuz</button>
+
+				</div>
+			</Content>
+		</GdprBanner>
+
+		<div class="line-bottom fixed-bottom"></div>
+	</main>
+</div>
+
+<i class="bi bi-arrow-up-circle-fill btt"  onclick="topFunction()" id="backToTop"></i>
+
+@code {
+	
+	private List<GdprConsentDetail> _gdprConsents;
+	protected override void OnInitialized()
+	{
+		_gdprConsents = new List<GdprConsentDetail>()
+		{
+			new GdprConsentDetail() { ConsentName = "Required", IsAccepted = true },
+			new GdprConsentDetail() { ConsentName = "Session", IsAccepted = true },
+			new GdprConsentDetail() { ConsentName = "Tracking", IsAccepted = true },
+		};
+	}
+
+	//GDPR banner
+	private GdprBanner _gdprBanner;
+	private string _bannerColor = "lightblack";
+	private int _bannerConsentValidDays = 20;
+	private double _bannerOpacity = 70;
+
+}

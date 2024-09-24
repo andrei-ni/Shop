@@ -1,0 +1,31 @@
+﻿@page "/desprenoi"
+
+<PageTitle>Despre noi | DrPrint</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+<h3>Despre noi</h3>
+<br/>
+<h5>Bun venit pe Drprint.ro! </h5>
+
+<span>
+Suntem un studio de productie publicitara creativ. Proiectul tau este cel mai important pentru noi. 
+Apeleaza cu incredere, te putem ajuta cu: design, productie obiecte promotionale, 
+print digital, tiparire brosuri, pliante, carti de vizita, flyere, bannere outdoor de mari 
+dimensiuni, banner de tip roll-up. De asemenea, iti oferim personalizare tricouri, 
+personalizare cani, tablouri personalizate de tip canvas si multe altele. 
+</span>
+<br/>
+<br/>
+<b>Totul pentru afacerea ta.</b>
+<br/>
+<br/>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Prima pagina", href: "/"),
+        new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+    };
+
+}

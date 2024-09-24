@@ -1,0 +1,63 @@
+﻿.show-menu {
+    display: block;
+}
+
+.dropdown-item {
+    text-decoration: none;
+}
+
+.user-button{
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.close {
+    display:none;
+}
+
+.show {
+    margin-top: 5px;
+    display:block;
+    position: absolute;
+    width: 225px;
+    background-color: #fff;
+    border-radius: 6px;
+}
+
+.fdiv {
+    display: flex;
+    align-items: center;
+}
+.sdiv {
+    background-color: #F8F8F8;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.text {
+    margin-left: 10px;
+    font-size: 12px;
+}
+.bi-person-fill {
+    color: #4467C9;
+    margin-left: 10px;
+    font-size: 30px;
+}
+.inbtn {
+    background: linear-gradient(to right, #4565C7, #3984DF);
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+}
+.regbtn{
+    margin-left: 10px;
+    font-size: 13px;
+}
+.bi-x-circle {
+    margin-left: 20px;
+    cursor: pointer;
+}

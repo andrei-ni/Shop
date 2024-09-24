@@ -1,0 +1,212 @@
+﻿@page "/cart"
+@inject ICartService CartService
+@inject IOrderService OrderService
+@inject IAuthService AuthService
+@inject IAddressService AddressService
+@inject NavigationManager _nav
+
+
+<PageTitle>Cosul meu</PageTitle>
+
+<br />
+<h3>Cosul meu</h3>
+
+@if (cartProducts == null || cartProducts.Count == 0)
+{
+	<span>@shopMessage</span>
+	<br />
+}
+else if (orderPlaced)
+{
+	<span>Multumim pentru comanda! Iti poti verifica comanda <a href="orders">aici.</a></span>
+	<br />
+}
+else
+{
+	<div>
+		@foreach (var product in cartProducts)
+		{
+			<div class="container">
+				<div class="image-wrapper">
+					
+					<img src="@product.ImageUrl" class="image" />
+
+				</div>
+				<div class="name">
+					<h5><a href="/product/@product.ProductId">@product.Name</a></h5>
+
+					<input type="number"
+				   value="@product.Quantity" @onchange="@((ChangeEventArgs e) => UpdateQuantity(e, product))"
+				   class="form-control input-quantity" min="1" />
+
+				</div>
+				<div class="cart-product-price">
+					@((product.Price * product.Quantity).ToString("0.00")) Lei
+					<br />
+					<button class="btn" style="margin-right: -15px;"
+					@onclick="@(()=> RemoveProductFromCart(product.ProductId))">
+						Sterge
+					</button>
+				</div>
+
+			</div>
+		}
+		<hr />
+		@if (isAuthenticated)
+		{
+			<div>
+				<h5>Adresa Livrare</h5>
+				<AddressForm />
+			</div>
+
+			<br/>
+			<div style="text-align: left">
+			<label for="message">Mesaj catre magazin (optional)</label>
+			<textarea class="form-control" id="message" rows="3" maxlength="250" @bind="@order.Message"></textarea>
+			</div>
+
+			<br/>
+			<label for="message">Incarca imagine pentru produs personalizat (optional)</label><br />
+			<InputFile OnChange = "@OnFileChange" single />
+			<br/>
+			@if (!string.IsNullOrEmpty(order.Image))
+			{
+				<img src="@order.Image" style="width: 100px"/>
+				<button type="button" class="btn" style="border-radius: 5px;"
+				@onclick="(() => RemoveImage())">
+				Sterge
+				</button>
+			}
+
+		}
+		else{
+			<span style="color:red;">Pentru a finaliza comanda, te rugam sa intri in cont sau sa creezi un cont.</span>
+			<br/>
+				<button class="cart-btn" @onclick="@(()=>_nav.NavigateTo("/login?returnUrl=cart"))">Intra in cont</button>
+				<button class="cart-btn" @onclick="@(()=>_nav.NavigateTo("/register"))">Creeaza cont</button>
+		}
+		<hr />
+		<div class="total-cart-product-price">
+			<h5>Sumar comanda</h5>
+			<span class="sumar">Cost produse: @cartProducts.Sum(p => p.Price * p.Quantity).ToString("0.00") Lei</span><br>
+			<span class="sumar">Cost livrare: 20.00 Lei</span>
+			<hr />
+				
+				Total (@cartProducts.Count): @totalPrice.ToString("0.00") Lei
+			<br />
+
+			<a @onclick="PlaceOrder" class="cpbutton">Comanda</a><br>
+			<div hidden="@showMsg">
+					<span class="address">@shopMessage</span>
+				<br />
+			</div>
+		</div>
+
+	</div>
+}
+
+<br />
+
+@code {
+	List<CartProductResponse> cartProducts = null;
+	OrderDTO order = new OrderDTO();
+
+	double totalPrice = 0.00;
+	double price = 0.00;
+	string shopMessage = "Se incarca cosul de cumparaturi...";
+	bool orderPlaced = false;
+	public bool showMsg = true;
+	bool isAuthenticated = false;
+	bool isSubmitting;
+
+	protected override async Task OnInitializedAsync()
+	{
+		isAuthenticated = await AuthService.IsUserAuthenticated();
+		orderPlaced = false;
+		await LoadCart();
+	}
+	private async Task RemoveProductFromCart(int productId)
+	{
+		await CartService.RemoveProductFromCart(productId);
+		await LoadCart();
+
+	}
+	private async Task LoadCart()
+	{
+		await CartService.GetCartItemsCount();
+		cartProducts = await CartService.GetCartProducts();
+		price = cartProducts.Sum(p => p.Price * p.Quantity);
+		totalPrice = price + 20.00;
+		if (cartProducts == null || cartProducts.Count == 0)
+		{
+			shopMessage = "Cosul este gol.";
+
+		}
+	}
+
+	private async Task UpdateQuantity(ChangeEventArgs e, CartProductResponse product)
+	{
+		product.Quantity = int.Parse(e.Value.ToString());
+		if (product.Quantity < 1)
+		{
+			product.Quantity = 1;
+		}
+		await CartService.UpdateQuantity(product);
+		await LoadCart();
+	}
+
+	async Task OnFileChange(InputFileChangeEventArgs e)
+	{
+		var format = "image/jpeg";
+		foreach (var image in e.GetMultipleFiles(1))
+		{
+			var resizedImage = await image.RequestImageFileAsync(format, 2000, 2000);
+			var buffer = new byte[resizedImage.Size];
+			await resizedImage.OpenReadStream().ReadAsync(buffer);
+			order.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+		}
+
+	}
+
+	void RemoveImage()
+	{
+		order.Image = string.Empty;
+	}
+
+	private async Task PlaceOrder()
+	{
+		if (!isAuthenticated)
+		{
+			_nav.NavigateTo("/login?returnUrl=cart");
+		}
+		else
+		{
+			if (isSubmitting)
+				return;
+
+			isSubmitting = true;
+			try
+			{
+				var address = await AddressService.GetAddress();
+				if (address != null)
+				{
+					order.Message = order.Message;
+					order.Address = address;
+					await OrderService.PlaceOrder(order);
+					await CartService.GetCartItemsCount();
+					orderPlaced = true;
+				}
+				else
+				{
+					showMsg = !showMsg;
+					shopMessage = "Te rugam sa completezi adresa de livrare.";
+				}
+			}
+			finally
+			{
+				isSubmitting = false;
+			}
+	}
+	}
+
+}

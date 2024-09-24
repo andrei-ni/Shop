@@ -1,0 +1,214 @@
+﻿@page "/product/{id:int}"
+@inject IProductService ProductService
+@inject ICartService CartService
+@inject NavigationManager _nav
+@inject IJSRuntime _js
+
+@if(product != null){
+	<PageTitle>Detalii produs - @product.Name</PageTitle>
+}
+else
+{
+	<PageTitle>Detalii produs</PageTitle>
+}
+
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+@if (ShowPopup)
+{
+	<!-- This is the popup -->
+	<div class="modal" tabindex="-1" style="display:block" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Produsul a fost adaugat in cos</h5>
+					<!-- Button to close the popup -->
+					<button type="button" class="close"
+						@onclick="ClosePopup">
+						<span aria-hidden="true"><i class="bi bi-x-lg"></i></span>
+					</button>
+				</div>
+				<!-- The body of the popup -->
+				<div class="modal-body">
+
+					<img src="@product.ImageUrl" alt="@product.Name" class="gimg">
+					<br />
+
+					<span> @product.Name </span>
+					<br />
+					@if (product.OriginalPrice > product.Price)
+					{
+						<b class="pboriginalprice">@product.OriginalPrice.ToString("0.00") Lei</b>
+						<h4 class="pbprice">@product.Price.ToString("0.00") Lei (-@Discount(product)%)</h4>
+					}
+
+					else
+					{
+						<h4 class="pbprice">@product.Price.ToString("0.00") Lei</h4>
+					}
+					<!-- A button -->
+					<button class="btn btn-primary btn-detalii" @onclick="@(()=>_nav.NavigateTo("/cart"))">
+						Vezi detalii cos
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+
+@if (product == null)
+{
+	<br/>
+	<br />
+	<span>@message</span>
+	<br />
+	<br/>
+}
+else
+{
+	<h3>@product.Name</h3>
+	
+	<div class="columns">
+		<div class="box">
+			@if (product.Images.Count > 1)
+			{
+
+				<div id="desktop">
+					<MudCarousel Class="mud-width-full" ItemsSource="@product.Images" Style="height: 550px; width: 550px;">
+						<ItemTemplate>
+							<MudImage Src="@context.Data" Alt="@product.Name"></MudImage>
+						</ItemTemplate>
+					</MudCarousel>
+				</div>
+				<div id="mobile">
+					<MudCarousel Class="mud-width-full" ItemsSource="@product.Images" Style="height: 350px; width: 300px;">
+						<ItemTemplate>
+							<MudImage Src="@context.Data" Style="height: 300px; width: 300px;" Alt="@product.Name"></MudImage>
+						</ItemTemplate>
+					</MudCarousel>
+				</div>
+			}
+			else
+			{
+				<img src="@product.ImageUrl" alt="@product.Name" class="mimg">
+			}
+
+		</div>
+		<div class="box">
+			<div class="product-info">
+
+				@if (product.OriginalPrice > product.Price)
+				{
+					<b class="pboriginalprice">@product.OriginalPrice.ToString("0.00") Lei</b>
+					<h4 class="pbprice">@product.Price.ToString("0.00") Lei (-@Discount(product)%)</h4>
+				}
+
+				else
+				{
+					<h4 class="pbprice">@product.Price.ToString("0.00") Lei</h4>
+				}
+
+				<b>Livrare prin curier</b>
+				<p class="pbstock">Stoc: @product.Stock</p>
+				<button class="pbbutton" @onclick="AddToCart">
+					<i class="bi bi-cart"></i>&nbsp;&nbsp;&nbsp;Adauga in cos
+				</button>
+			</div>
+			
+			@if (product.SubCategoryId == 7 || product.SubCategoryId == 24)
+			{
+			    <a href="/images/tricouri-funny.pdf" target="_blank" class="btn btn-secondary catalog">Vezi catalog</a>
+			}
+			@if (product.SubCategoryId == 27)
+			{
+				<a href="/images/catalog-cadouri.pdf" target="_blank" class="btn btn-secondary catalog">Vezi catalog</a>
+			}
+		</div>
+
+		<div>
+			<AuthorizeView Roles="Admin">
+				<br/>
+				<button class="btn btn-primary" @onclick="() => CopyToClipboard(_nav.Uri)">Share on Facebook</button>
+				<button class="btn btn-primary" @onclick="() => EditProduct(product.Id)">Editeaza produs</button>
+			 </AuthorizeView>
+		</div>
+
+		<div class="description">
+			<h4>Descriere:</h4>
+			<hr/>
+					<span class="dtext">@((MarkupString)@product.Description)</span>
+		</div>
+	</div>
+}
+<br />
+
+@code {
+	[Parameter] // this is for the route @page "/product/{id:int}"
+	public int Id { get; set; }
+
+	bool ShowPopup = false;
+	void OpenPopup()
+	{
+		// Open the Popup
+		ShowPopup = true;
+	}
+
+	void ClosePopup()
+	{
+		// Close the Popup
+		ShowPopup = false;
+	}
+	void EditProduct(int productId)
+    {
+        _nav.NavigateTo($"admin/product/{productId}");
+    }
+
+	private Product? product = null;
+	private string message = string.Empty;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		message = "Produsul se incarca...";
+		var result = await ProductService.GetProduct(Id);
+		if (!result.Success)
+		{
+			message = result.Message; // the message is in .server-services-productservice.cs
+		}
+		else
+		{
+			product = result.Data;
+		}
+	}
+
+	public async Task CopyToClipboard(string url)
+	{
+		await _js.InvokeVoidAsync("navigator.clipboard.writeText", url);
+		await _js.InvokeVoidAsync("open", "https://www.facebook.com/", "_blank");
+	}
+
+	private async Task AddToCart()
+	{
+		var cartItem = new CartItem
+			{
+				ProductId = product.Id,
+			};
+		await CartService.AddToCart(cartItem);
+		ShowPopup = true;
+	}
+
+	public string Discount(Product product)
+	{
+		var discount = (product.Price / product.OriginalPrice) * 100;
+		double reverse = 100.00 - discount;
+
+		return reverse.ToString("0.00");
+	}
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+
+}

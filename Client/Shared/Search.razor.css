@@ -1,0 +1,11 @@
+﻿.searchbar {
+    margin-top: 18px;
+}
+.form-control {
+    border-radius: 20px !important;
+    height: 35px;
+}
+.bi-search {
+    font-size: 20px;
+    top: -10px;
+}

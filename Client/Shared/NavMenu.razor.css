@@ -1,0 +1,115 @@
+
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.top-row {
+    height: 3.5rem;
+    background-image: linear-gradient(90deg, #F91D23, #0084EF);
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+.oi {
+    width: 2rem;
+    font-size: 1.1rem;
+    vertical-align: text-top;
+    top: -2px;
+}
+.nav-item {
+    margin: 20px 0 20px 0;
+    font-size: 16px;
+}
+
+.top-div {
+    display: flex;
+    flex-direction: row;
+}
+.mobile-nav-btns {
+    margin-top: 15px;
+    margin-left: 70px;
+    display: flex;
+    gap: 1rem;
+    font-size: 18px;
+}
+.bi-person-circle, .bi-bag {
+    margin-right: 8px;
+}
+
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+    .navbar {
+        width: 300px;
+    }
+
+    .mobile-nav-btns {
+        display: none;
+    }
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+    .search-mobile {
+        display: none;
+    }
+}
+
+#navbar-ads {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+    
+}
+
+    #navbar-ads img {
+        width: 200px;
+        transition: transform .2s;
+        margin: 10px 0 10px 0;
+        border-radius: 10px;
+
+    }
+        #navbar-ads img:hover {
+            cursor: pointer;
+            transform: scale(1.04);
+        }
+
+.mobile-nav-btns {
+    margin: 10px 0 0 40px;
+}
+
+.contul-meu{
+    padding-top: 10px;
+    font-size: 12px;
+}
+
+.bi-person-circle, .bi-bag {
+    font-size: 12px;
+}
+
+@media (max-width: 640.98px) { /*on mobile*/
+    #navbar-ads {
+        display: none;
+    }
+        
+    #desktop {
+        display: none;
+    }
+}
+@media (max-height: 799.98px) {
+    #navbar-ads {
+        display: none;
+    }
+}
+
+@media (min-width: 640.98px) {
+    #mobile {
+        display: none;
+    }
+}
+

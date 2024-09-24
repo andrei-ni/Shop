@@ -1,0 +1,32 @@
+﻿@media (max-width: 640.98px) { /*on mobile*/
+    .desktop {
+        display: none;
+    }
+
+    .mobile {
+        text-align: center;
+    }
+
+    .page-selection {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .middle {
+        margin: 10px;
+    }
+}
+
+@media (min-width: 640.98px) { /*on desktop*/
+    .mobile {
+        display: none;
+    }
+
+    .desktop {
+        margin-top: 15px;
+        text-align: center;
+    }
+    .page-selection {
+        margin-right: 10px;
+    }
+}

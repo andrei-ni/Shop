@@ -1,0 +1,29 @@
+﻿@inject AuthenticationStateProvider AuthStateProvider
+@using System.Security.Claims
+
+
+@if (authorized)
+{
+	<a class="dropdown-item" href="admin/client-orders">Comenzi clienti</a>
+	<a class="dropdown-item" href="admin/products/1">Produse</a>
+	<a class="dropdown-item" href="admin/popular-products">Produse populare</a>
+	<a class="dropdown-item" href="admin/users/1">Lista clienti</a>
+	<a class="dropdown-item" href="admin/categories">Categorii</a>
+	<a class="dropdown-item" href="admin/subcategories">Subcategorii</a>
+	<a class="dropdown-item" href="https://webmail.drprint.ro/Mondo/lang/sys/login.aspx" target="_blank">Email</a>
+	<hr/>
+}
+
+@code {
+	bool authorized = false;
+	protected override async Task OnInitializedAsync()
+	{
+		string role = (await AuthStateProvider.GetAuthenticationStateAsync()).User.Claims
+		.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+
+		if (role.Contains("Admin"))
+		{
+			authorized = true;
+		}
+	}
+}

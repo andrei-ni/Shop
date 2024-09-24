@@ -1,0 +1,24 @@
+﻿@page "/harta-site"
+@inject ISubCategoryService SubCategoryService
+
+<PageTitle>Harta site | DrPrint</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Harta site (@SubCategoryService.SubCategories.Count())</h3>
+
+
+@foreach (var sc in SubCategoryService.SubCategories)
+			{
+				<span>
+					<a href="@sc.Url/1"> @sc.Name </a>
+				</span><br />
+			}
+<br />
+
+@code {
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

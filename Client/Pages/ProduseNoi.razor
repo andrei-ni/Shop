@@ -1,0 +1,23 @@
+﻿@page "/produse-noi"
+
+<PageTitle>Produse Noi | DrPrint</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+<h3>Produse noi</h3>
+
+
+<NewProducts/>
+
+<br />
+<br />
+
+
+@code {
+
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

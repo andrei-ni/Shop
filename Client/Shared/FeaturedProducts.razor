@@ -1,0 +1,55 @@
+﻿@inject IProductService ProductService
+@implements IDisposable
+
+<center><h4 class="mt-3">Iti recomandam:</h4></center>
+
+@if (ProductService.Products == null || ProductService.Products.Count == 0)
+{
+	<div class="circle"></div>
+	<div class="message">
+		<span>@ProductService.Message</span>
+	</div>
+	
+}
+else
+{
+	<div class="container">
+		@foreach (var product in ProductService.Products.Take(12))
+		{
+			@if (product.Featured)
+			{
+				<div class="featured-products">
+					<div>
+						<a href="product/@product.Id">
+							@if (!string.IsNullOrEmpty(product.ImageUrl))
+							{
+								<img src="@product.ImageUrl" />
+							}
+							else if (product.Images.Count > 0)
+							{
+								<img src="@product.Images[0].Data" />
+							}
+						</a>
+					</div>
+					<h4><a href="product/@product.Id">@product.Name</a></h4>
+					<h5><a href="product/@product.Id" class="price">@product.Price.ToString("0.00") Lei</a></h5>
+				</div>
+			}
+		}
+	</div>
+}
+<br />
+
+@code {
+
+	protected override void OnInitialized()
+	{
+		ProductService.ProductsChanged += StateHasChanged;
+	}
+
+	public void Dispose()
+	{
+		ProductService.ProductsChanged -= StateHasChanged;
+	}
+
+}

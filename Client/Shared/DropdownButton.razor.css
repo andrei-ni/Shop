@@ -1,0 +1,30 @@
+﻿.show-menu {
+    display: block;
+    overflow: scroll;
+}
+::-webkit-scrollbar-thumb {
+    background: #3A83DF;
+}
+::-webkit-scrollbar-track {
+    background: white;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: white;
+}
+
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover, .dropbtn:focus {
+        color: #0084EF !important;
+    }
+
+.dropdown-menu {
+    margin-top: -45px;
+    margin-left: 285px;
+    max-height: 400px;
+}

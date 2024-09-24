@@ -1,0 +1,23 @@
+User-agent: *
+Disallow: /admin
+Disallow: /profile
+Disallow: /orders
+
+Allow: /
+
+User-agent: 008
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: Synthesio
+Disallow: /
+
+Sitemap: https://www.drprint.ro/sitemap.xml

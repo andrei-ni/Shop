@@ -1,0 +1,225 @@
+﻿/* Loading */
+.circle {
+    margin: 0 auto;
+    border: 6px solid #3A83DF;
+    border-radius: 50%;
+    border-top: 6px solid red;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.message {
+    text-align: center;
+}
+
+/* Product list */
+.media-img {
+    max-height: 100px;
+    transition: transform .2s;
+}
+
+    .media-img:hover {
+        transform: scale(1.1);
+    }
+
+.media-img-wrapper {
+    width: 200px;
+    text-align: center;
+}
+.page-selection {
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+
+#product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#product-box {
+    padding: 10px 10px 10px 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+    max-width: 200px;
+}
+
+.pbimage { /*image*/
+    flex: 1;
+    width: 180px;
+    height: 180px;
+    position: relative;
+    transition: transform .2s;
+}
+    .pbimage:hover { /*image*/
+        transform: scale(1.05);
+    }
+
+.pbname { /*name*/
+    flex: 1;
+    top: 10px;
+    position: relative;
+    text-decoration: none;
+    padding-bottom: 10px;
+}
+
+.pbstock { /*stock*/
+    flex: 1;
+    position: relative;
+    top: -5px;
+    color: green;
+    font-size: 13px;
+}
+.pbdiscount { /*discount banner*/
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    position: relative;
+    max-width: 60px;
+    min-width: 60px;
+    max-height: 20px;
+    min-height: 20px;
+    top: -35%;
+    left: -10px;
+    background: linear-gradient(to right, #C02610, #EA280B);
+    border-radius: 0 10%;
+    color: white;
+}
+.pbsuper { /*super banner*/
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    position: relative;
+    max-width: 95px;
+    min-width: 95px;
+    max-height: 20px;
+    min-height: 20px;
+    left: -10px;
+    background: #F22200;
+    border-radius: 0 10%;
+    color: white;
+}
+
+.pboriginalprice { /*original price*/
+    flex: 1;
+    position: relative;
+    color: grey;
+    font-size: 13px;
+    text-decoration-line: line-through;
+    padding-bottom: 5px;
+}
+.pbprice { /*current price*/
+    flex: 1;
+    position: relative;
+    top: -10px;
+    color: #EF2100;
+    font-size: 17px;
+    padding-bottom: 5px;
+}
+
+.pbbutton { /*button*/
+    flex: 1;
+    background: linear-gradient(to right, #4565C7, #3984DF);
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    max-height: 40px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+}
+
+    .pbbutton:hover {
+        background: linear-gradient(to right, #203171, #4565C7);
+    }
+
+.description {
+    font-size: 14px;
+}
+@media(max-width: 640.98px) {  /*on mobile*/
+    .description {
+        display:none;
+    }
+    #product-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.7rem;
+
+    }
+    #product-box {
+        padding: 10px 10px 10px 10px;
+        background-color: white;
+        flex: 1;
+        flex-direction: column;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 5px;
+        min-width: 150px;
+    }
+    .pbdiscount { /*discount banner*/
+        flex: 1;
+        text-align: center;
+        font-size: 13px;
+        position: relative;
+        max-width: 60px;
+        min-width: 60px;
+        max-height: 20px;
+        min-height: 20px;
+        top: -30%;
+        left: -10px;
+        background: linear-gradient(to right, #C02610, #EA280B);
+        border-radius: 0 10%;
+        color: white;
+    }
+    .pbsuper { /*super banner*/
+        flex: 1;
+        text-align: center;
+        font-size: 13px;
+        position: relative;
+        max-width: 95px;
+        min-width: 95px;
+        max-height: 20px;
+        min-height: 20px;
+        left: -10px;
+        background: #F22200;
+        border-radius: 0 10%;
+        color: white;
+    }
+    .pbimage { /*image*/
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    .pbname { /*name*/
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,59 @@
+﻿@page "/termenisiconditii"
+
+<PageTitle>Termeni si conditii | DrPrint</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+<h3>Termeni si conditii</h3>
+
+
+<span>
+<b>DrPrint</b> – este denumirea comerciala a ADCO BIROTIC ART SRL., persoana juridica de nationalitate romana, avand sediul 
+social in Bucuresti, avand numar de ordine in Registrul Comertului J40/12196/2011,cod unic de inregistrare fiscala RO29217017.
+<br />
+<br />
+<b>Cumparator</b> – poate fi orice persoana fizica care are varsta peste 16 ani sau persoana juridica sau orice entitate juridica 
+care isi face un Cont in Site si efectueaza o Comanda.
+<br />
+<br />
+<b>Client</b> – poate fi orice persoana fizica care are varsta peste 16 ani sau persoana juridica care are sau obtine acces la 
+CONTINUT, prin orice mijloc de comunicare pus la dispozitie de catre DrPrint (electronic, telefonic, etc) sau in baza unui 
+acord de utilizare existent intre DrPrint si acesta si care necesita crearea si utilizarea unui Cont.
+<br />
+<br />
+<b>Utilizator</b> – orice persoana fizica care are varsta peste 16 ani sau persoana juridica inregistrata pe Site, care, prin 
+finalizarea procesului de creare a Contului, si-a dat acordul cu privire la clauzele specifice site-ului din sectiunea 
+Termeni si Conditii Generale.
+<br />
+<br />
+<b>Cont</b> – sectiunea din Site formata dintr-o adresa de e-mail si o parola care permite Cumparatorului transmiterea 
+Comenzii si care contine informatii despre Client/Cumparator si istoricul Cumparatorului in Site (Comenzi, facturi, etc.). 
+Utilizatorul este responsabil si se va asigura ca toate informatiile introduse la crearea Contului 
+sunt corecte, complete si actualizate.
+<br />
+<br />
+<b>Cosul meu</b> – sectiune din Cont care permite Cumparatorului/Utilizatorului sa adauge Bunuri sau Servicii pe care doreste 
+sa le achizitionezela momentul adaugarii sau la un moment ulterior; in cazul in care Bunurile sau Serviciile nu sunt 
+achizitionate la momentul adaugarii prin efectuarea Comenzii, Cumparatorul/Utilizatorul va beneficia de serviciul 
+oferit de catre Vanzator de urmarire a Bunurilor si Serviciilor prin primirea de Comunicari Comerciale din partea acestuia.
+<br />
+<br />
+<b>Site</b> – magazinul online gazduit la adresa web DrPrint.ro.
+<br />
+<b>Comanda</b> – un document electronic ce intervine ca forma de comunicare intre Vanzator si Cumparator prin care Cumparatorul 
+transmite Vanzatorului, prin intermediul Site-ului intentia sa de a achizitiona Bunuri si Servicii de pe Site.
+<br />
+<br />
+<b>Bunuri si Servicii</b> – orice produs sau serviciu listat pe Site, inclusiv produsele si serviciile mentionate in Comanda, 
+care urmeaza a fi furnizate de catre Vanzator, Cumparatorului ca urmare a Contractului incheiat.
+</span>
+<br />
+<br />
+
+@code {
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

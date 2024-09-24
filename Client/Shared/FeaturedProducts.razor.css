@@ -1,0 +1,85 @@
+﻿.container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    max-width: 800px;
+}
+    .container::-webkit-scrollbar {
+        width: 2em;
+    }
+
+    .container::-webkit-scrollbar-thumb {
+        background: #3A83DF;
+    }
+
+img {
+    max-width: 160px;
+    max-height: 350px;
+    border-radius: 6px;
+    transition: transform .2s;
+    margin-bottom: 10px;
+}
+
+    img:hover {
+        transform: scale(1.05);
+    }
+
+.featured-products {
+    margin: 10px;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    max-width: 180px;
+    overflow-wrap: break-word;
+}
+
+a {
+    text-decoration: none;
+}
+
+.price {
+    color: #EF2100;
+    font-size: 17px;
+}
+
+@media(max-width: 1023.98px) {
+    .container {
+        justify-content: flex-start;
+    }
+}
+
+.circle {
+    margin: 0 auto;
+    border: 6px solid #3A83DF;
+    border-radius: 50%;
+    border-top: 6px solid red;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.message {
+    text-align:center;
+}

@@ -1,0 +1,129 @@
+﻿@page "/contact"
+@inject IEmailService EmailService
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<PageTitle>Contact | DrPrint</PageTitle>
+
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Contact</h3>
+
+<h6>Telefon: </h6> <span><a href="tel:+40723896370">0723 896 370</a></span>
+<br/>
+<br/>
+<h6>Trimite mesaj: </h6>
+<EditForm Model="email" OnValidSubmit="SendEmail">
+<div class="mb-3">
+  <label for="@(() => email.Email)" class="form-label">Adresa de Email</label>
+  <input type="email" id="emailname" @bind-value="email.Email" class="form-control" placeholder="exemplu@drprint.ro">
+</div>
+<div class="mb-3">
+  <label for="@(() => email.Message)" class="form-label">Mesaj</label>
+  <textarea id="emailbody" class="form-control" rows="3" maxlength="250" @bind="email.Message"></textarea>
+</div>
+
+<div hidden="@show">
+<button type="submit" class="btn btn-primary" style="border-radius: 5px;">Trimite</button>
+</div>
+<br/>
+<br/>
+
+<div class="section">
+        <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6LdAxrQiAAAAAIHGqZ5jtutIkIhpzGB7h9O56Gu-" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+</div>
+<br/>
+@if(message != string.Empty){
+            <div class="@messageCssClass">
+                <span>@message</span>
+            </div>
+}
+<br/>
+<br/>
+	</EditForm>
+
+
+@code {
+    string message = string.Empty;
+    string messageCssClass = string.Empty;
+    public bool show = false;
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+    EmailDTO email = new EmailDTO();
+
+    public async Task SendEmail()
+    {
+        if (ValidReCAPTCHA)
+        {
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+            try
+            {
+                ServerVerifying = true;
+                StateHasChanged();
+
+                if (email.Email == string.Empty || email.Message == string.Empty)
+                {
+                    messageCssClass = "text-danger";
+                    message = "Mesajul sau email-ul este gol.";
+                }
+                else
+                {
+
+                    var result = await EmailService.SendClientMessage(email);
+
+                    if (result.Success)
+                    {
+                        show = !show;
+                        messageCssClass = "text-success";
+                        message = result.Message;
+                    }
+                    else
+                    {
+                        messageCssClass = "text-danger";
+                        message = "A aparut o eroare, incercati mai tarziu.";
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerifying = false;
+                
+                StateHasChanged();
+            }
+        }
+        else{
+            messageCssClass = "text-danger";
+            message = "Te rugam sa bifezi casuta anti-robot.";
+        }
+
+		
+	}
+
+	private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerifying = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerifying;
+
+    private void OnSuccess()
+    {
+        ValidReCAPTCHA = true;
+    }
+
+    private void OnExpired()
+    {
+        ValidReCAPTCHA = false;
+    }
+    // 6LdAxrQiAAAAAIHGqZ5jtutIkIhpzGB7h9O56Gu- - drprint
+
+    // 6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl - localhost
+
+}

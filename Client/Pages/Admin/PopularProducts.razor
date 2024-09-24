@@ -1,0 +1,39 @@
+﻿@page "/admin/popular-products"
+@inject IProductService ProductService
+@inject NavigationManager _nav
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>10 Produse populare DrPrint</PageTitle>
+<br />
+<h3>10 Produse populare</h3>
+
+
+@if (ProductService.AdminProducts == null)
+{
+	<span>Se incarca lista...</span>
+	<br />
+}
+else
+{
+	foreach (var prod in ProductService.AdminProducts.OrderByDescending(p => p.View).Take(10))
+	{
+		<br />
+		<img src="@prod.ImageUrl" style="width:100px"/> 
+		<span>ID: @prod.Id | </span>
+		<a href="product/@prod.Id"><span>Nume: @prod.Name | </span></a>
+		<span>Pret: @prod.OriginalPrice Lei | </span>
+		<span>Vizualizari: @prod.View</span>
+		<br/>
+	}
+
+
+}
+<br />
+
+
+@code {
+	protected override async Task OnInitializedAsync()
+	{
+		await ProductService.GetAdminProducts(1);
+	}
+}

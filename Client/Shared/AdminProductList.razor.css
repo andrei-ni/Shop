@@ -1,0 +1,10 @@
+﻿img {
+    max-height: 80px;
+    max-width: 80x;
+}
+
+table {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}

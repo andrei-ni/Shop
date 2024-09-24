@@ -1,0 +1,58 @@
+﻿@page "/orders/{orderId:int}"
+@inject IOrderService OrderService
+
+<PageTitle>Detalii comanda</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+<h3>Detalii comanda</h3>
+
+@if (order == null)
+{
+	<span>Se incarca pagina...</span>
+	<br />
+}
+else
+{
+	<h5>Comanda din @order.OrderDate.ToString("dd-MM-yyyy")</h5>
+	<div>
+		@foreach (var product in order.Products)
+		{
+			<div class="container">
+				<div class="image-wrapper">
+					<img src="@product.ImageUrl" class="image"/>
+				</div>
+				<div class="name">
+					<h5><a href="/product/@product.ProductId">@product.Name</a></h5>
+					<span>Cantitate: @product.Quantity</span>
+				</div>
+				<div class="product-price">@product.TotalPrice.ToString("0.00") Lei</div>
+				
+				
+			</div>
+		}
+		
+		<hr/>
+			<div class="product-price"><span class="small">+Transport: 20.00 Lei</span><br>Total: @totalPrice.ToString("0.00") Lei</div>
+	</div>
+}
+
+<br/>
+
+@code {
+	[Parameter]
+	public int orderId { get; set; }
+	double totalPrice = 0.00;
+	OrderDetailsResponse? order = null;
+
+	
+	protected override async Task OnInitializedAsync()
+	{
+		order = await OrderService.GetOrderDetails(orderId);
+		totalPrice = order.TotalPrice + 20.00;
+	}
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

@@ -1,0 +1,88 @@
+﻿@page "/register"
+@inject IAuthService AuthService
+@inject IEmailService EmailService
+
+<PageTitle>Cont nou</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+@if (isAuthenticated)
+{
+	<br/>
+	<h4>Ai un cont activ.</h4>
+	<br />
+}
+else{
+
+<div class="cont-nou">
+	
+	<EditForm Model="user" OnValidSubmit="HandleRegistration">
+		<DataAnnotationsValidator />
+		<h5 class="pt-3 text-info text-center">Salut!</h5>
+		<div class="mb-3 pt-2">
+			<label for="email"> Introdu adresa de Email</label>
+			<input id="email" @bind-value="user.Email" class="form-control" type="email" placeholder="exemplu@drprint.ro" />
+			<ValidationMessage For="@(()=> user.Email)"/>
+		</div>
+
+		<div class="mb-3">
+			<label for="password">Parola</label>
+			<input id="password" @bind-value="user.Password" class="form-control" type="password" />
+			<ValidationMessage For="@(()=> user.Password)"/>
+		</div>
+
+		<div class="mb-3">
+			<label for="confirmPassword"> Confirma parola</label>
+			<input id="confirmPassword" @bind-value="user.ConfirmPassword" class="form-control" type="password" />
+			<ValidationMessage For="@(()=> user.ConfirmPassword)"/>
+		</div>
+		
+		<button type="submit" class="btn btn-primary mb-3">Continua</button>
+		<div class="@messageCssClass">
+			<span>@message</span>
+		</div>
+		
+		<br/>
+
+	</EditForm>
+
+</div>
+}
+
+@code {
+	UserRegister user = new UserRegister();
+	EmailDTO email = new EmailDTO();
+
+	string message = string.Empty;
+	string messageCssClass = string.Empty;
+
+	bool isAuthenticated = false;
+	protected override async Task OnInitializedAsync()
+	{
+		isAuthenticated = await AuthService.IsUserAuthenticated();
+	}
+
+	async Task HandleRegistration()
+	{
+		var register = await AuthService.Register(user);
+		email.To = user.Email;
+
+		message = register.Message;
+		if (register.Success)
+		{
+			messageCssClass = "text-success";
+			await EmailService.SendRegisterEmail(email);
+		}
+		else
+		{
+			messageCssClass = "text-danger";
+		}
+		
+	}
+
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+}

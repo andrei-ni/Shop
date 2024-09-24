@@ -1,0 +1,17 @@
+﻿.login {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cont-nou {
+    margin-bottom: 15px;
+    float: right;
+}
+
+.forgot-psw {
+    font-size: 15px
+}
+    .forgot-psw:hover {
+        text-decoration: underline;
+    }

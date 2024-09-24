@@ -1,0 +1,95 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.WebUtilities
+@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager _nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ICartService CartService
+
+<PageTitle>Login</PageTitle>
+<MudBreadcrumbs Items="_items" MaxItems="5"></MudBreadcrumbs>
+
+@if (isAuthenticated)
+{
+	<br/>
+	<h4>Esti logat deja.</h4>
+	<br />
+}
+else{
+<div class="login">
+
+	<EditForm Model="user" OnValidSubmit="HandleLogin">
+		<DataAnnotationsValidator />
+		<h5 class="pt-3 text-info text-center">Salut!</h5>
+		<div class="mb-3 pt-2">
+			<label for="email"> Introdu adresa de Email</label>
+			<input id="email" @bind-value="user.Email" class="form-control" type="email" placeholder="exemplu@drprint.ro" />
+			<ValidationMessage For="@(()=> user.Email)" />
+		</div>
+
+		<div class="mb-3">
+			<label for="password">Parola</label>
+			<input id="password" @bind-value="user.Password" class="form-control" type="password" />
+			<ValidationMessage For="@(()=> user.Password)" />
+		</div>
+
+		<button type="submit" class="btn btn-primary mb-3">Login</button>
+		<button @onclick="@(()=>_nav.NavigateTo("/Register"))" class="cont-nou btn">Cont nou</button>
+		<div class="text-danger">
+			<span>@errorMessage</span>
+		</div>
+		<button @onclick="@(()=>_nav.NavigateTo("/forgot-password"))" 
+			class="forgot-psw">Am uitat parola</button>
+		<br />
+		<br />
+	</EditForm>
+	
+</div>
+}
+
+@code {
+	private UserLogin user = new UserLogin();
+	private string errorMessage = string.Empty;
+
+	private string returnUrl = string.Empty;
+	protected override void OnInitialized()
+	{
+		var uri = _nav.ToAbsoluteUri(_nav.Uri);
+		if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url)){
+			returnUrl = url;
+		}
+	}
+	bool isAuthenticated = false;
+	protected override async Task OnInitializedAsync()
+	{
+		isAuthenticated = await AuthService.IsUserAuthenticated();
+	}
+	private async Task HandleLogin()
+	{
+		var result = await AuthService.Login(user);
+
+		if (result.Success)
+		{
+			errorMessage = string.Empty;
+			await LocalStorage.SetItemAsync("authToken", result.Data);
+			await AuthenticationStateProvider.GetAuthenticationStateAsync();
+			await CartService.StoreCartItems(true);
+			await CartService.GetCartItemsCount();
+			_nav.NavigateTo(returnUrl);
+		}
+		else
+		{
+			errorMessage = result.Message;
+		}
+
+	}
+	private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+	{
+		new BreadcrumbItem("Prima pagina", href: "/"),
+		new BreadcrumbItem("Inapoi", href: "javascript:history.go(-1)"),
+
+	};
+
+
+
+}

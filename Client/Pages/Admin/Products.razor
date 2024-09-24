@@ -1,0 +1,103 @@
+﻿@page "/admin/products/{page:int}"
+@inject IProductService ProductService
+@inject NavigationManager _nav
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Produse DrPrint</PageTitle>
+<br />
+<h3>Produse</h3>
+
+@if (ProductService.AdminProducts.Count == 0 || ProductService.AdminProducts == null)
+{
+    <br/>
+    <br/>
+    <div class="circle"></div>
+    <div class="message">
+        <span>Se incarca lista...</span>
+    </div>
+    <br />
+    <br />
+}
+else
+{
+    <AdminProductList />
+}
+
+<div class="desktop">
+    @if (ProductService.CurrentPage == 1)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled>Pagina anterioara</button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/products/@(ProductService.CurrentPage - 1)">Pagina anterioara</a>
+    }
+
+    @for (var i = 1; i <= ProductService.PageCount; i++)
+    {
+        if (i > 3)
+        {
+            <button class="btn btn-outline-primary page-selection" disabled>@ProductService.CurrentPage din @ProductService.PageCount</button>
+            <a class="btn @(ProductService.PageCount==ProductService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+            href="admin/products/@ProductService.PageCount">@ProductService.PageCount</a>
+            break;
+        }
+        <a class="btn @(i==ProductService.CurrentPage ? "btn-primary" : "btn-outline-primary") page-selection"
+       
+       href="/admin/products/@i">@i</a>
+    }
+    @if (ProductService.CurrentPage >= ProductService.PageCount)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled>Pagina urmatoare</button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/products/@(ProductService.CurrentPage + 1)">Pagina urmatoare</a>
+    }
+</div>
+
+<div class="mobile">
+    @if (ProductService.CurrentPage == 1)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-left"></i></button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/products/@(ProductService.CurrentPage - 1)"><i class="bi bi-arrow-left"></i></a>
+    }
+
+    <button class="btn btn-outline-primary page-selection middle" disabled>@ProductService.CurrentPage din @ProductService.PageCount</button>
+
+    @if (ProductService.CurrentPage >= ProductService.PageCount)
+    {
+        <button class="btn btn-outline-primary page-selection" disabled><i class="bi bi-arrow-right"></i></button>
+    }
+    else
+    {
+        <a class="btn btn-outline-primary page-selection"
+       href="/admin/products/@(ProductService.CurrentPage + 1)"><i class="bi bi-arrow-right"></i></a>
+    }
+</div>
+
+<br/>
+<br/>
+
+@code {
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ProductService.GetAdminProducts(Page);
+
+    }
+    
+    /*
+    @using System.ComponentModel.DataAnnotations.Schema
+    @using System.Linq;
+    @using System.Reflection;
+    */
+}

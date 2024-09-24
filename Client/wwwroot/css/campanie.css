@@ -1,0 +1,255 @@
+﻿.btt {
+    float: right;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    color: #333;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+/* top */
+.top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    background: #DB0045;
+    min-height: 345px;
+    justify-content: center;
+}
+
+.logo {
+    margin-top: 50px;
+}
+
+.back-btn {
+    display: flex;
+    border: none;
+    border-radius: 20px;
+    height: 25px;
+    min-width: 125px;
+    margin: 250px 0 0 -250px;
+    background: white;
+    color: black;
+    text-decoration:none !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    color: white;
+    margin: 150px 0 0 200px;
+}
+
+span:nth-child(1) {
+    font-size: 30px;
+}
+
+span:nth-child(2) {
+    font-size: 50px;
+}
+
+.img {
+    max-height: 345px;
+    max-width: 870px;
+}
+
+/* middle */
+.middle {
+    min-height: 50px;
+    background: #3A83DF;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.middle a {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+    a:hover {
+        background: white;
+        color: black;
+    }
+
+.bottom {
+    padding-top: 50px;
+}
+
+.container {
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+
+/* bottom */
+#product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#product-box {
+    padding: 10px 10px 10px 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+    max-width: 200px;
+}
+
+.pbimage { /*image*/
+    flex: 1;
+    width: 180px;
+    height: 180px;
+    position: relative;
+    transition: transform .2s;
+}
+
+    .pbimage:hover { /*image*/
+        transform: scale(1.05);
+    }
+
+.pbname { /*name*/
+    flex: 1;
+    font-weight: 100;
+    color: black;
+    font-size: 20px;
+    position: relative;
+    text-decoration: none;
+    padding-bottom: 10px;
+}
+
+.pbstock { /*stock*/
+    flex: 1;
+    position: relative;
+    color: green;
+    font-size: 13px;
+}
+
+.pbprice { /*current price*/
+    flex: 1;
+    position: relative;
+    color: #EF2100;
+    font-size: 17px;
+    padding-bottom: 5px;
+}
+
+.pbbutton { /*button*/
+    flex: 1;
+    background: linear-gradient(to right, #4565C7, #3984DF);
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    max-height: 40px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+}
+
+    .pbbutton:hover {
+        background: linear-gradient(to right, #203171, #4565C7);
+        color: white;
+    }
+
+@media (max-width: 1551px) { /*on mobile*/
+    .btt {
+        font-size: 100px;
+    }
+
+    .text {
+        display: none !important;
+    }
+
+    .back-btn {
+        flex-grow: 1;
+        font-size: 35px;
+        min-height: 70px;
+        margin-right: 30px !important;
+        margin-bottom: 40px !important;
+    }
+
+    a {
+        font-size: 35px;
+    }
+
+    .middle {
+        padding: 20px 0 20px 0;
+    }
+
+    #product-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2.5rem;
+    }
+
+    #product-box {
+        padding: 10px 10px 10px 10px;
+        background-color: white;
+        flex: 1;
+        flex-direction: column;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 5px;
+        min-width: 400px;
+    }
+
+    .pbimage { /*image*/
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .pbname { /*name*/
+        font-size: 30px;
+    }
+
+    .pbstock { /*stock*/
+        flex: 1;
+        position: relative;
+        color: green;
+        font-size: 20px;
+    }
+
+
+    .pboriginalprice { /*original price*/
+        flex: 1;
+        position: relative;
+        color: grey;
+        font-size: 30px;
+        text-decoration-line: line-through;
+        padding-bottom: 5px;
+    }
+
+    .pbprice { /*current price*/
+        flex: 1;
+        position: relative;
+        color: #EF2100;
+        font-size: 30px;
+        padding-bottom: 5px;
+    }
+
+    .pbbutton { /*button*/
+        flex: 1;
+        background: linear-gradient(to right, #4565C7, #3984DF);
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 30px;
+        min-height: 60px;
+        padding: 8px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .container {
+        font-size: 30px;
+    }
+}

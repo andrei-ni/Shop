@@ -1,0 +1,16 @@
+﻿.cosul-meu {
+    font-size: 14px;
+}
+
+.cart-btn {
+    flex: 1;
+    background: linear-gradient(to right, #4565C7, #3984DF);
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    max-height: 40px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+}
